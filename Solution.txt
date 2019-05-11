@@ -1,0 +1,65 @@
+import java.io.*;
+import java.util.*;
+
+public class Solution {
+   public static int[] Bfs(Map<Integer, List<Integer>> b, int s) {
+        int n = b.size();
+        int distance[] = new int[n-1];
+        Set<Integer> visited = new HashSet();
+        Queue<Integer> queue = new LinkedList<>();
+        queue.add(-1);
+        queue.add(s);
+        visited.add(s);
+        int level = 0;
+        while (queue.size() > 1) {
+            int current = queue.remove();
+            if (current == -1) {
+                queue.add(-1);
+                level ++;
+                continue;
+            }
+            List<Integer> children = b.get(current);
+            for (int i : children) {
+                if (!visited.contains(i)) {
+                    if (i < s)
+                        distance[i-1] = 6 * level;
+                    else
+                        distance[i-2] = 6 * level;
+                    queue.add(i);
+                    visited.add(i);
+                }
+            }
+        }
+        for (int i = 0; i< distance.length; i++) {
+            if (distance[i] == 0)
+                distance[i] = -1;
+        }
+        return distance;
+    }
+
+    public static void main(String[] args) {
+        Scanner s = new Scanner(System.in);
+        int t = s.nextInt();
+        for (int i = 0; i< t; i++) {
+            int n = s.nextInt();
+            int e = s.nextInt();
+            Map<Integer, List<Integer>> b = new HashMap();
+            for (int j = 0; j < n; j++) {
+                b.put(j + 1, new ArrayList<>());
+            }
+            for (int j = 0; j < e; j++) {
+                int p1 = s.nextInt();
+                int p2 = s.nextInt();
+                b.get(p1).add(p2);
+                b.get(p2).add(p1);
+            }
+            int st = s.nextInt();
+
+            int distance[] = Bfs(b, st);
+            for (int dd : distance) {
+                System.out.print(dd + " ");
+            }
+            System.out.println();
+        }
+    }
+}
